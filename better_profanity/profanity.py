@@ -91,8 +91,8 @@ def read_wordlist():
         print("Unable to find profanity_wordlist.txt")
 
 
-def get_replacement_for_swear_word(censor_char):
-    return censor_char * 4
+def get_replacement_for_swear_word(cur_word, censor_char):
+    return cur_word[0] + (censor_char * (len(cur_word)-1))
 
 
 def contains_profanity(text):
@@ -149,14 +149,14 @@ def hide_swear_words(text, censor_char):
             cur_word, text, next_words_indices, CENSOR_WORDSET
         )
         if contains_swear_word:
-            cur_word = get_replacement_for_swear_word(censor_char)
+            cur_word = get_replacement_for_swear_word(cur_word, censor_char)
             skip_index = end_index
             char = ""
             next_words_indices = []
 
         # If the current a swear word
         if cur_word.lower() in CENSOR_WORDSET:
-            cur_word = get_replacement_for_swear_word(censor_char)
+            cur_word = get_replacement_for_swear_word(cur_word, censor_char)
 
         censored_text += cur_word + char
         cur_word = ""
@@ -164,7 +164,7 @@ def hide_swear_words(text, censor_char):
     # Final check
     if cur_word != "" and skip_index < len(text) - 1:
         if cur_word.lower() in CENSOR_WORDSET:
-            cur_word = get_replacement_for_swear_word(censor_char)
+            cur_word = get_replacement_for_swear_word(cur_word, censor_char)
         censored_text += cur_word
     return censored_text
 
